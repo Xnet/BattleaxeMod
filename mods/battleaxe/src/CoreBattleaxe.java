@@ -26,7 +26,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @NetworkMod(clientSideRequired=true,serverSideRequired=false)
-@Mod(modid=CoreBattleaxe.modid,name="Battleaxe Mod",version="#2")
+@Mod(modid=CoreBattleaxe.modid,name="Battleaxe Mod",version="#3")
 public class CoreBattleaxe {
 	
 	public static final String modid = "Battleaxe";
