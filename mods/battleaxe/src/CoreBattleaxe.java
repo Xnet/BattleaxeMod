@@ -26,7 +26,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @NetworkMod(clientSideRequired=true,serverSideRequired=false)
-@Mod(modid=CoreBattleaxe.modid,name="Battleaxe Mod",version="#1")
+@Mod(modid=CoreBattleaxe.modid,name="Battleaxe Mod",version="#2")
 public class CoreBattleaxe {
 	
 	public static final String modid = "Battleaxe";
@@ -91,19 +91,72 @@ public class CoreBattleaxe {
 			if(enableCoreIngotRedstone && enableRedstone)
 				set(coreConfig, "general", "enableIngotRedstone", true);
 		coreConfig.save();
+		
+		init_pre();
 	}
 	
 	@Init
 	public void load(FMLInitializationEvent event){
-		
+		init();
+	}
+	
+	public void init_pre(){
 		if(enableVanilla){
-			GameRegistry.registerFuelHandler(new Flann_FuelHandler());
-			
 			battleaxeW = new Flann_ItemBattleaxe(battleaxeWID, "Wooden", texLoc+"battleaxeW", Block.planks, WOOD).setUnlocalizedName("battleaxeWood");
 			battleaxeS = new Flann_ItemBattleaxe(battleaxeSID, "Stone", texLoc+"battleaxeS", Block.cobblestone, STONE).setUnlocalizedName("battleaxeStone");
 			battleaxeI = new Flann_ItemBattleaxe(battleaxeIID, "Iron", texLoc+"battleaxeI", Item.ingotIron, IRON).setUnlocalizedName("battleaxeIron");
 			battleaxeD = new Flann_ItemBattleaxe(battleaxeDID, "Diamond", texLoc+"battleaxeD", Item.diamond, DIAMOND).setUnlocalizedName("battleaxeDiamond");
 			battleaxeG = new Flann_ItemBattleaxe(battleaxeGID, "Golden", texLoc+"battleaxeG", Item.ingotGold, GOLD).setUnlocalizedName("battleaxeGold");
+		}
+		if(enableEmerald){
+			String ingot = "emerald";
+			String ingot2 = "emerald";
+			boolean useOD = false;
+			ItemStack ccm = new ItemStack(Item.emerald);
+			boolean ccmDam = false;
+			
+			battleaxeE = new Flann_ItemBattleaxe(battleaxeEID, "Emerald", texLoc+"battleaxeE", ccm, ccmDam, EMERALD).setUnlocalizedName("battleaxeEmerald");
+		}
+		if(enableNetherrack){
+			String ingot = "netherrack";
+			String ingot2 = "netherrack";
+			boolean useOD = false;
+			ItemStack ccm = new ItemStack(Block.netherrack);
+			boolean ccmDam = false;
+			
+			battleaxeN = new Flann_ItemBattleaxe(battleaxeNID, "Netherrack", texLoc+"battleaxeN", ccm, ccmDam, NETHERRACK).setUnlocalizedName("battleaxeNetherrack");
+		}
+		if(enableObsidian){
+			String ingot = "obsidian";
+			String ingot2 = "obsidian";
+			boolean useOD = false;
+			ItemStack ccm = new ItemStack(Block.obsidian);
+			boolean ccmDam = false;
+			
+			battleaxeO = new Flann_ItemBattleaxe(battleaxeOID, "Obsidian", texLoc+"battleaxeO", ccm, ccmDam, OBSIDIAN).setUnlocalizedName("battleaxeObsidian");
+		}
+		if(enableRedstone){
+			String ingot = "ingotRedstone";
+			String ingot2 = "ingotRedstone";
+			boolean useOD = true;
+			ItemStack ccm = new ItemStack(Item.ingotIron);
+			boolean ccmDam = false;
+			
+			battleaxeR = new Flann_ItemBattleaxe(battleaxeRID, "Redstone", texLoc+"battleaxeR", ccm, ccmDam, REDSTONE).setUnlocalizedName("battleaxeRedstone");
+		}
+		if(enableSteel){
+			String ingot = "ingotSteel";
+			String ingot2 = "ingotSteelUnhardened";
+			boolean useOD = true;
+			ItemStack ccm = new ItemStack(Item.ingotIron);
+			boolean ccmDam = false;
+			
+			battleaxeSt = new Flann_ItemBattleaxe(battleaxeStID, "Steel", texLoc+"battleaxeSt", ccm, ccmDam, STEEL).setUnlocalizedName("battleaxeSteel");
+		}
+	}
+	public void init(){
+		if(enableVanilla){
+			GameRegistry.registerFuelHandler(new Flann_FuelHandler());
 			
 			MinecraftForge.setToolClass(battleaxeW, "axe", 0);
 			MinecraftForge.setToolClass(battleaxeS, "axe", 1);
@@ -130,7 +183,6 @@ public class CoreBattleaxe {
 			ItemStack ccm = new ItemStack(Item.emerald);
 			boolean ccmDam = false;
 			
-			battleaxeE = new Flann_ItemBattleaxe(battleaxeEID, "Emerald", texLoc+"battleaxeE", ccm, ccmDam, EMERALD).setUnlocalizedName("battleaxeEmerald");
 			MinecraftForge.setToolClass(battleaxeE, "axe", EMERALD.getHarvestLevel());
 			OreDictionary.registerOre("battleaxeEmerald", battleaxeE);
 			if(useOD){
@@ -149,7 +201,6 @@ public class CoreBattleaxe {
 			ItemStack ccm = new ItemStack(Block.netherrack);
 			boolean ccmDam = false;
 			
-			battleaxeN = new Flann_ItemBattleaxe(battleaxeNID, "Netherrack", texLoc+"battleaxeN", ccm, ccmDam, NETHERRACK).setUnlocalizedName("battleaxeNetherrack");
 			MinecraftForge.setToolClass(battleaxeN, "axe", NETHERRACK.getHarvestLevel());
 			OreDictionary.registerOre("battleaxeNetherrack", battleaxeN);
 			if(useOD){
@@ -168,7 +219,6 @@ public class CoreBattleaxe {
 			ItemStack ccm = new ItemStack(Block.obsidian);
 			boolean ccmDam = false;
 			
-			battleaxeO = new Flann_ItemBattleaxe(battleaxeOID, "Obsidian", texLoc+"battleaxeO", ccm, ccmDam, OBSIDIAN).setUnlocalizedName("battleaxeObsidian");
 			MinecraftForge.setToolClass(battleaxeO, "axe", OBSIDIAN.getHarvestLevel());
 			OreDictionary.registerOre("battleaxeObsidian", battleaxeO);
 			if(useOD){
@@ -187,7 +237,6 @@ public class CoreBattleaxe {
 			ItemStack ccm = new ItemStack(Item.ingotIron);
 			boolean ccmDam = false;
 			
-			battleaxeR = new Flann_ItemBattleaxe(battleaxeRID, "Redstone", texLoc+"battleaxeR", ccm, ccmDam, REDSTONE).setUnlocalizedName("battleaxeRedstone");
 			MinecraftForge.setToolClass(battleaxeR, "axe", REDSTONE.getHarvestLevel());
 			OreDictionary.registerOre("battleaxeRedstone", battleaxeR);
 			if(useOD){
@@ -206,7 +255,6 @@ public class CoreBattleaxe {
 			ItemStack ccm = new ItemStack(Item.ingotIron);
 			boolean ccmDam = false;
 			
-			battleaxeSt = new Flann_ItemBattleaxe(battleaxeStID, "Steel", texLoc+"battleaxeSt", ccm, ccmDam, STEEL).setUnlocalizedName("battleaxeSteel");
 			MinecraftForge.setToolClass(battleaxeSt, "axe", STEEL.getHarvestLevel());
 			OreDictionary.registerOre("battleaxeSteel", battleaxeSt);
 			if(useOD){
@@ -218,7 +266,6 @@ public class CoreBattleaxe {
 				GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(battleaxeSt,1),"BBB","BIB"," I ",'B', ccm,'I',Item.stick));
 			}
 		}
-		
 	}
 	
 	public Property set(Configuration config, String category, String key, boolean defaultValue)
