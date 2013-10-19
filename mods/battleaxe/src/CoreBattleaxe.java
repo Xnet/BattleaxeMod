@@ -26,7 +26,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @NetworkMod(clientSideRequired=true,serverSideRequired=false)
-@Mod(modid=CoreBattleaxe.modid,name="Battleaxe Mod",version="#3")
+@Mod(modid=CoreBattleaxe.modid,name="Battleaxe Mod",version="#4")
 public class CoreBattleaxe {
 	
 	public static final String modid = "Battleaxe";
@@ -37,6 +37,7 @@ public class CoreBattleaxe {
 	public static boolean enableCoreSteel			= true;
 	public static boolean enableCoreStickSteel		= false;
 	public static boolean enableCoreIngotRedstone	= true;
+	public static boolean commonConfig;
 	
 	public static Item battleaxeW, battleaxeS, battleaxeI, battleaxeD, battleaxeG,
 		battleaxeE, battleaxeN, battleaxeO, battleaxeR, battleaxeSt;
@@ -60,37 +61,60 @@ public class CoreBattleaxe {
 	
 	@PreInit
 	public void preInit(FMLPreInitializationEvent event) {
-		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
-		config.load();
-			battleaxeWID = config.get("item", "battleaxeWood", ItemID+0).getInt()-256;
-			battleaxeSID = config.get("item", "battleaxeStone", ItemID+1).getInt()-256;
-			battleaxeIID = config.get("item", "battleaxeIron", ItemID+2).getInt()-256;
-			battleaxeDID = config.get("item", "battleaxeDiamond", ItemID+3).getInt()-256;
-			battleaxeGID = config.get("item", "battleaxeGold", ItemID+4).getInt()-256;
-			
-			battleaxeEID = config.get("item", "battleaxeEmerald", ItemID+5).getInt()-256;
-			battleaxeNID = config.get("item", "battleaxeNetherrack", ItemID+6).getInt()-256;
-			battleaxeOID = config.get("item", "battleaxeObsidian", ItemID+7).getInt()-256;
-			battleaxeRID = config.get("item", "battleaxeRedstone", ItemID+8).getInt()-256;
-			battleaxeStID = config.get("item", "battleaxeSteel", ItemID+9).getInt()-256;
-			
-			enableVanilla = config.get("enable", "enableVanilla", true).getBoolean(true);
-			enableEmerald = config.get("enable", "enableEmerald", true).getBoolean(true);
-			enableNetherrack = config.get("enable", "enableNetherrack", true).getBoolean(true);
-			enableObsidian = config.get("enable", "enableObsidian", true).getBoolean(true);
-			enableRedstone = config.get("enable", "enableRedstone", true).getBoolean(true);
-			enableSteel = config.get("enable", "enableSteel", true).getBoolean(true);
-		config.save();
+		String categoryBlock, categoryItem, categoryGeneral, categoryEnable, categoryGeneralCore;
 		
-		Configuration coreConfig = new Configuration(new File(event.getSuggestedConfigurationFile().getPath().replace(modid, "FlannCore")));
+		Configuration coreConfig = new Configuration(new File(event.getSuggestedConfigurationFile().getPath().replace("Battleaxe", "FlannCore")));
 		coreConfig.load();
-			if(enableCoreSteel && enableSteel)
-				set(coreConfig, "general", "enableSteel", true);
+			commonConfig = coreConfig.get("core", "combineConfigs", false).getBoolean(false);
+			if(commonConfig){
+				String modname = "battleaxe";
+				categoryBlock = modname+"_Block";
+				categoryItem = modname+"_Item";
+				categoryGeneral = modname+"_General";
+				categoryEnable = modname+"_Enable";
+				categoryGeneralCore = "core_General";
+			}else{
+				categoryBlock = "block";
+				categoryItem = "item";
+				categoryGeneral = "general";
+				categoryEnable = "enable";
+				categoryGeneralCore = "general";
+			}
+			if(enableCoreSteel)
+				set(coreConfig, categoryGeneralCore, "enableSteel", true);
 			if(enableCoreStickSteel)
-				set(coreConfig, "general", "enableStickSteel", true);
-			if(enableCoreIngotRedstone && enableRedstone)
-				set(coreConfig, "general", "enableIngotRedstone", true);
+				set(coreConfig, categoryGeneralCore, "enableStickSteel", true);
+			if(enableCoreIngotRedstone)
+				set(coreConfig, categoryGeneralCore, "enableIngotRedstone", true);
 		coreConfig.save();
+		
+		Configuration config;
+		if(commonConfig == false){
+			config = new Configuration(event.getSuggestedConfigurationFile());
+		}else{
+			config = coreConfig;
+		}
+		
+		config.load();
+			battleaxeWID = config.get(categoryItem, "battleaxeWood", ItemID+0).getInt()-256;
+			battleaxeSID = config.get(categoryItem, "battleaxeStone", ItemID+1).getInt()-256;
+			battleaxeIID = config.get(categoryItem, "battleaxeIron", ItemID+2).getInt()-256;
+			battleaxeDID = config.get(categoryItem, "battleaxeDiamond", ItemID+3).getInt()-256;
+			battleaxeGID = config.get(categoryItem, "battleaxeGold", ItemID+4).getInt()-256;
+			
+			battleaxeEID = config.get(categoryItem, "battleaxeEmerald", ItemID+5).getInt()-256;
+			battleaxeNID = config.get(categoryItem, "battleaxeNetherrack", ItemID+6).getInt()-256;
+			battleaxeOID = config.get(categoryItem, "battleaxeObsidian", ItemID+7).getInt()-256;
+			battleaxeRID = config.get(categoryItem, "battleaxeRedstone", ItemID+8).getInt()-256;
+			battleaxeStID = config.get(categoryItem, "battleaxeSteel", ItemID+9).getInt()-256;
+			
+			enableVanilla = config.get(categoryEnable, "enableVanilla", true).getBoolean(true);
+			enableEmerald = config.get(categoryEnable, "enableEmerald", true).getBoolean(true);
+			enableNetherrack = config.get(categoryEnable, "enableNetherrack", true).getBoolean(true);
+			enableObsidian = config.get(categoryEnable, "enableObsidian", true).getBoolean(true);
+			enableRedstone = config.get(categoryEnable, "enableRedstone", true).getBoolean(true);
+			enableSteel = config.get(categoryEnable, "enableSteel", true).getBoolean(true);
+		config.save();
 		
 		init_pre();
 	}
